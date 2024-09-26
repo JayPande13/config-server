@@ -4,13 +4,41 @@ spring:
   application:
     name: "configserver"
   profiles:
-    active: native
+    active: git
+  #    active: native
   cloud:
     config:
       server:
-        native:
-#          search-locations: "classpath:/config"
-            search-locations: "file:///Users//jaypande//Documents//config"
+#        native:
+#          search-locations: "classpath:/config" - Classpath implementation
+#          search-locations: "file:///Users//jaypande//Documents//config" - fileSystem implementation
+          git:
+            uri: "https://github.com/JayPande13/the-braing-config.git"
+            default-label: main
+            timeout: 5 #config server should wait for only 5 min to connect to the git repo
+            clone-on-start: true #clone the repo on startup of the application
+            force-pull: true #telling to the config server to always read the properties from the main (git repo) rather than reading it from local changes
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+
+encrypt:
+  key: "435802%#@5230348492041GG$2"
 
 
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    liveness-state:
+      enabled: true
+    readiness-state:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true
